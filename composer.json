@@ -1,0 +1,24 @@
+{
+    "name": "ignislabs/qry",
+    "description": "A simple query bus",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luciano Longo",
+            "email": "luciano.longo@studioignis.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "preferred-install": "dist"
+    },
+    "autoload": {
+        "psr-4": {
+            "IgnisLabs\\Qry\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=7"
+    }
+}
