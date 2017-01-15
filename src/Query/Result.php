@@ -1,6 +1,6 @@
 <?php
 
-namespace IgnisLabs\Qry;
+namespace IgnisLabs\Flare\Query;
 
 // Synchronous promise
 class ResultPromise {

@@ -1,6 +1,6 @@
 {
-    "name": "ignislabs/qry",
-    "description": "A simple query bus",
+    "name": "ignislabs/flare-cqrs",
+    "description": "Flare is a small CQRS library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -15,10 +15,10 @@
     },
     "autoload": {
         "psr-4": {
-            "IgnisLabs\\Qry\\": "src"
+            "IgnisLabs\\Flare\\": "src"
         }
     },
     "require": {
-        "php": ">=7"
+        "php": ">=7.1"
     }
 }
