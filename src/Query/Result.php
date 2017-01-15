@@ -3,62 +3,35 @@
 namespace IgnisLabs\Flare\Query;
 
 // Synchronous promise
-class ResultPromise {
+class Result {
+    /**
+     * Handler result
+     */
+    private $result;
 
-    private $successCallback;
-
-    private $errorCallback;
-
-    private $success;
-
-    private $error;
-
-    private $done = false;
-
+    /**
+     * Result constructor.
+     * @param Handler $handler
+     * @param $query
+     */
     public function __construct(Handler $handler, $query) {
-        try {
-            $result = $handler->handle($query);
-            $this->resolve($result);
-        } catch (\Exception $ex) {
-            $this->reject($ex);
-        }
+        $this->result = $handler->handle($query);
     }
 
-    public function resolve($result) {
-        if ($this->successCallback) {
-            $this->success($result);
-            $this->done = true;
-            return;
-        }
-        $this->success = $result;
+    /**
+     * Execute the closure on successful result
+     * @param callable $callback
+     */
+    public function then(callable $callback) {
+        $callback($this->success);
     }
 
-    public function resolve(\Exception $ex) {
-        if ($this->errorCallback) {
-            $this->error($ex);
-            $this->done = true;
-            return;
-        }
-        $this->error = $ex;
-    }
-
-    public function success(closure $closure) {
-        $this->successCallback = $closure;
-
-        if (!$this->done && !$this->successCallback && $this->success) {
-            $closure($this->success);
-        }
-    }
-
-    public function error(closure $closure) {
-        $this->errorCallback = $closure;
-        if (!$this->done && !$this->errorCallback && $this->error) {
-            $closure($this->error);
-        }
-    }
-
-    public function then(closure $success = null, closure $error = null) {
-        $this->success($success);
-        $this->error($error);
+    /**
+     * Get the successful result
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 }
