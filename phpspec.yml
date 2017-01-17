@@ -1,0 +1,5 @@
+suites:
+  flare-cqrs:
+    namespace: IgnisLabs\FlareCQRS
+    psr4_prefix: IgnisLabs\FlareCQRS
+formatter.name: pretty

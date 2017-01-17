@@ -15,10 +15,13 @@
     },
     "autoload": {
         "psr-4": {
-            "IgnisLabs\\Flare\\": "src"
+            "IgnisLabs\\FlareCQRS\\": "src"
         }
     },
     "require": {
         "php": ">=7.1"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^3.2"
     }
 }
