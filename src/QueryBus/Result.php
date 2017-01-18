@@ -1,6 +1,6 @@
 <?php
 
-namespace IgnisLabs\FlareCQRS\Query;
+namespace IgnisLabs\FlareCQRS\QueryBus;
 
 class Result {
 

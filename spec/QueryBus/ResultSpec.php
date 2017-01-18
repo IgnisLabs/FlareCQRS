@@ -1,9 +1,8 @@
 <?php
 
-namespace spec\IgnisLabs\FlareCQRS\Query;
+namespace spec\IgnisLabs\FlareCQRS\QueryBus;
 
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
-use IgnisLabs\FlareCQRS\Query\Result;
+use IgnisLabs\FlareCQRS\QueryBus\Result;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

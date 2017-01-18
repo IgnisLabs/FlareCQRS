@@ -1,11 +1,11 @@
 <?php
 
-namespace spec\IgnisLabs\FlareCQRS\Query;
+namespace spec\IgnisLabs\FlareCQRS;
 
 use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
 use IgnisLabs\FlareCQRS\Handler\MessageHandler;
-use IgnisLabs\FlareCQRS\Query\QueryBus;
-use IgnisLabs\FlareCQRS\Query\Result;
+use IgnisLabs\FlareCQRS\QueryBus;
+use IgnisLabs\FlareCQRS\QueryBus\Result;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

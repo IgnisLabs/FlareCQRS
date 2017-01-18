@@ -1,8 +1,8 @@
 <?php
 
-namespace IgnisLabs\FlareCQRS\Query;
+namespace IgnisLabs\FlareCQRS;
 
-use IgnisLabs\FlareCQRS\MessageBus;
+use IgnisLabs\FlareCQRS\QueryBus\Result;
 
 class QueryBus extends MessageBus {
 
