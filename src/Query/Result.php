@@ -1,8 +1,10 @@
 <?php
 
-namespace IgnisLabs\Flare\Query;
+namespace IgnisLabs\FlareCQRS\Query;
 
 // Synchronous promise
+use IgnisLabs\FlareCQRS\Handler\MessageHandler;
+
 class Result {
     /**
      * Handler result
@@ -11,10 +13,10 @@ class Result {
 
     /**
      * Result constructor.
-     * @param Handler $handler
+     * @param MessageHandler $handler
      * @param $query
      */
-    public function __construct(Handler $handler, $query) {
+    public function __construct(MessageHandler $handler, $query) {
         $this->result = $handler->handle($query);
     }
 
@@ -23,7 +25,7 @@ class Result {
      * @param callable $callback
      */
     public function then(callable $callback) {
-        $callback($this->success);
+        $callback($this->result);
     }
 
     /**
