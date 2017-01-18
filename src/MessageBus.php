@@ -28,6 +28,26 @@ abstract class MessageBus {
     }
 
     /**
+     * Replace middlewares
+     * It will create another bus instance, thus, not affecting subsequent runs
+     * @param Middleware[] $middlewares
+     * @return static
+     */
+    public function middlewares(array $middlewares) {
+        return new static($this->locator, $middlewares);
+    }
+
+    /**
+     * Add a middleware to the chain
+     * It will create another bus instance, thus, not affecting subsequent runs
+     * @param Middleware $middleware
+     * @return static
+     */
+    public function addMiddleware(Middleware $middleware) {
+        return new static($this->locator, array_merge($this->middlewares, [$middleware]));
+    }
+
+    /**
      * Get the message handler
      * @param object $message
      * @return MessageHandler

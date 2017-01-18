@@ -30,4 +30,14 @@ class MessageBusSpec extends ObjectBehavior
         $message = new TestMessage();
         $this->dispatch($message)->shouldBe('bar');
     }
+
+    function it_returns_a_new_instance_when_adding_middlewares()
+    {
+        $this->addMiddleware(new TestMiddleware)->shouldNotBe($this);
+    }
+
+    function it_returns_a_new_instance_when_replacing_middlewares()
+    {
+        $this->middlewares([new TestMiddleware])->shouldNotBe($this);
+    }
 }
