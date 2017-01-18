@@ -12,7 +12,7 @@ interface Locator {
      * @param string $message
      * @return void
      */
-    public function addHandler(string $handler, string $message) : void;
+    public function addHandler(string $handler, string $message);
 
     /**
      * Get handler

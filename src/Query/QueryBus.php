@@ -1,12 +1,13 @@
 <?php
 
-namespace IgnisLabs\Flare\Query;
+namespace IgnisLabs\FlareCQRS\Query;
 
-use IgnisLabs\Flare\MessageBus;
+use IgnisLabs\FlareCQRS\MessageBus;
 
 class QueryBus extends MessageBus {
 
-    public function dispatch($query) {
-        return new Result($this->getHandler($query), $query);
+    public function dispatch($query) : Result {
+        $handler = $this->getHandlerLocator()->getHandler(get_class($query));
+        return new Result($handler, $query);
     }
 }

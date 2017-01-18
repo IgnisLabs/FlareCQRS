@@ -1,70 +1,29 @@
 <?php
 
-namespace IgnisLabs\Flare;
+namespace IgnisLabs\FlareCQRS;
 
-use IgnisLabs\Flare\Support\Container;
+use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
 
 abstract class MessageBus {
 
     /**
-     * @var Container
+     * Handler locator
+     * @var Locator
      */
-    private $container;
-
-    /**
-     * Message to Handler map
-     * @var array
-     */
-    private $handlers = [];
-
-    /*
-     * A pool of instantiated handlers map to their messages
-     * @var MessageHandler[]
-     */
-    private $handlerPool = [];
+    private $locator;
 
     /**
      * MessageBus constructor.
-     * @param Container $container
-     * @param array $map
+     * @param Locator $locator
      */
-    public function __construct(Container $container, array $map = []) {
-        $this->container = $container;
-
-        foreach ($map as $query => $handler) {
-            $this->addHandler($query, $handler);
-        }
+    public function __construct(Locator $locator) {
+        $this->locator = $locator;
     }
 
     /**
-     * Add a Handler for a Message by their classname
-     * @param string $message
-     * @param string|MessageHandler $handler
+     * @return Locator
      */
-    public function addHandler(string $message, $handler) {
-        $this->handlers[$message] = $handler;
-    }
-
-    /**
-     * Get a Message's corresponding Handler instance
-     * @param $message
-     * @return MessageHandler
-     * @throws \RuntimeException
-     */
-    public function getHandler($message) : MessageHandler {
-        // Get the message's corresponding handler classname
-        $messageClass = get_class($message);
-        $handlerClass = $this->handlers[$message] ?? null;
-        if (!$handlerClass) {
-            throw new \RuntimeException("No handler for [$messageClass]");
-        }
-
-        // Get a handler instance, either cached or new
-        $handler = $this->handlerPool[$handlerClass] ?? $this->container->resolve($handlerClass);
-        if (!$handler instanceof MessageHandler) {
-            throw new \RuntimeException('Handler should be an instance of [' . MessageHandler::class . ']');
-        }
-
-        return $handler;
+    protected function getHandlerLocator() : Locator {
+        return $this->locator;
     }
 }
