@@ -2,22 +2,19 @@
 
 namespace IgnisLabs\FlareCQRS\Query;
 
-// Synchronous promise
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
-
 class Result {
+
     /**
      * Handler result
      */
     private $result;
 
     /**
-     * Result constructor.
-     * @param MessageHandler $handler
-     * @param $query
+     * Result constructor
+     * @param mixed $result
      */
-    public function __construct(MessageHandler $handler, $query) {
-        $this->result = $handler->handle($query);
+    public function __construct($result) {
+        $this->result = $result;
     }
 
     /**

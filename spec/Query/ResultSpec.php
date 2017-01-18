@@ -9,11 +9,9 @@ use Prophecy\Argument;
 
 class ResultSpec extends ObjectBehavior
 {
-    function let(MessageHandler $handler)
+    function let()
     {
-        $message = new class {};
-        $handler->handle($message)->willReturn('this is the result');
-        $this->beConstructedWith($handler, $message);
+        $this->beConstructedWith('this is the result');
     }
 
     function it_is_initializable()
