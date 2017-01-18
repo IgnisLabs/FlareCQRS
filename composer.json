@@ -18,6 +18,11 @@
             "IgnisLabs\\FlareCQRS\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\IgnisLabs\\FlareCQRS\\": "spec"
+        }
+    },
     "require": {
         "php": ">=7.1"
     },
