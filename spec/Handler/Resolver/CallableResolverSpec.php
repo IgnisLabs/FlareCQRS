@@ -13,7 +13,7 @@ class CallableResolverSpec extends ObjectBehavior
     {
         $this->beConstructedWith(function(string $handlerId) {
             return new class implements MessageHandler {
-                public function execute($message) {}
+                public function handle($message) {}
             };
         });
     }

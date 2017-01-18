@@ -40,7 +40,7 @@ class MapLocatorSpec extends ObjectBehavior
         $this->getHandler('BarMessage')->shouldBe($handler);
     }
 
-    function it_returns_always_he_same_handler_instance()
+    function it_returns_always_the_same_handler_instance()
     {
         $this->getHandler('FooMessage')->shouldBe($this->getHandler('FooMessage'));
     }
