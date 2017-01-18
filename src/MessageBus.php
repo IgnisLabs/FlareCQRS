@@ -3,6 +3,7 @@
 namespace IgnisLabs\FlareCQRS;
 
 use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
+use IgnisLabs\FlareCQRS\Handler\MessageHandler;
 
 abstract class MessageBus {
 
@@ -21,9 +22,20 @@ abstract class MessageBus {
     }
 
     /**
-     * @return Locator
+     * Get the message handler
+     * @param object $message
+     * @return MessageHandler
      */
-    protected function getHandlerLocator() : Locator {
-        return $this->locator;
+    protected function getHandler($message) : MessageHandler {
+        return $this->locator->getHandler(get_class($message));
+    }
+
+    /**
+     * Handle the message and pass the result along
+     * @param object $message
+     * @return mixed
+     */
+    protected function handle($message) {
+        return $this->getHandler($message)->handle($message);
     }
 }
