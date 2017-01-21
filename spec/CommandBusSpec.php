@@ -2,14 +2,13 @@
 
 namespace spec\IgnisLabs\FlareCQRS;
 
+use IgnisLabs\FlareCQRS\CommandBus;
 use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
 use IgnisLabs\FlareCQRS\Handler\MessageHandler;
-use IgnisLabs\FlareCQRS\QueryBus;
-use IgnisLabs\FlareCQRS\QueryBus\Result;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class QueryBusSpec extends ObjectBehavior
+class CommandBusSpec extends ObjectBehavior
 {
     function let(Locator $locator, MessageHandler $handler)
     {
@@ -19,14 +18,14 @@ class QueryBusSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(QueryBus::class);
+        $this->shouldHaveType(CommandBus::class);
     }
 
-    function it_dispatches_a_message_to_the_corresponding_handler(MessageHandler $handler)
+    function it_dispatches_a_command(MessageHandler $handler)
     {
-        $query = new \stdClass();
+        $command = new \stdClass();
 
-        $handler->handle($query)->shouldBeCalled();
-        $this->dispatch($query)->shouldBeAnInstanceOf(Result::class);
+        $handler->handle($command)->shouldBeCalled();
+        $this->dispatch($command);
     }
 }
