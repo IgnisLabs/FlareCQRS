@@ -12,7 +12,7 @@ class MessageBusSpec extends ObjectBehavior
 {
     function let(Locator $locator)
     {
-        $message = new TestMessage();
+        $message = new TestMessage('foo');
         $handler = new TestHandler();
         $locator->getHandler(get_class($message))->willReturn($handler);
 
@@ -27,7 +27,7 @@ class MessageBusSpec extends ObjectBehavior
 
     function it_pipes_messages_through_middlewares()
     {
-        $message = new TestMessage();
+        $message = new TestMessage('foo');
         $this->dispatch($message)->shouldBe('bar');
     }
 
