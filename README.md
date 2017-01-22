@@ -95,10 +95,33 @@ $result->getResult();
 $commandBus->dispatch(new AddTaskCommand('Task Title', 'The task description'));
 ```
 
-### Query/Command classes
+### Message (Query & Command) classes
 
-You Query/Command classes are simple DTO objects, so there are no rules or
-contracts to use, they can be whatever you like.
+Your Message classes are simple DTO objects, so there are no rules or contracts
+to use, they can be whatever you like.
+
+You can, however, take advantage of the `DataAccessorTrait`. With it you can
+have automatic accessor properties for your message classes. The trait defines
+a `data` private property, a `get` accessor method and the `__get` magic method
+so you can access the data as properties:
+ 
+ ```php
+ <?php
+ 
+class MyMessage {
+    use \IgnisLabs\FlareCQRS\Message\DataAccessorTrait;
+ 
+    public function __construct(string $foo, int $bar) {
+        $this->data = compact('foo', 'bar');
+    }
+}
+ 
+$message = new MyMessage;
+// Using generic `get` accessor:
+$message->get('foo');
+// Using the magic accessor:
+$message->bar;
+ ```
 
 ### Handlers
 
