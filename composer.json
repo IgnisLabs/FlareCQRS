@@ -1,6 +1,6 @@
 {
     "name": "ignislabs/flare-cqrs",
-    "description": "Flare is a small CQRS library.",
+    "description": "Flare is a small and easy to use CQRS library.",
     "type": "library",
     "license": "MIT",
     "authors": [
