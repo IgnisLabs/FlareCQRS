@@ -5,7 +5,7 @@ Flare is a small and easy to use CQRS library.
 It drives CQRS by making use of the message bus pattern, separating Queries
 (interrogatory messages) from Commands (imperative messages).
 
-This library was greatly inspired by [Messaging Flavours][] article by Mathias
+This library was greatly inspired by [Messaging Flavours][1] article by Mathias
 Verraes.
 
 What is CQRS?
@@ -24,7 +24,7 @@ So, _Command and Query Responsibility Segregation_ (CQRS):
 > ... applies the CQS principle by using separate Query and Command objects to
   retrieve and modify data, respectively.
   
-Source: [Wikipedia][WikiCQRS]
+Source: [Wikipedia][2]
 
 Installation
 ------------
@@ -166,5 +166,5 @@ Buses are **immutable**, so adding or replacing middlewares on a bus will always
 return a new bus instance, so any subsequent calls to your buses will not be
 affected by these middleware changes.
 
-[Messaging Flavous]: http://verraes.net/2015/01/messaging-flavours/
-[WikiCQRS]: https://en.wikipedia.org/wiki/Command–query_separation
+[1]: http://verraes.net/2015/01/messaging-flavours/
+[2]: https://en.wikipedia.org/wiki/Command–query_separation
