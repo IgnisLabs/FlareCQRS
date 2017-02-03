@@ -82,10 +82,10 @@ Now you can use the buses to dispatch any message, like so:
 <?php
 // Queries can return whatever you need, it will be encapsulated in a Result object
 $result = $queryBus->dispatch(new GetAllTasksQuery('some', 'params'));
-// You can call `$result->then`:
-$result->then(function(TaskCollection $tasks) {
+// You can call `$result->call`:
+$result->call(function(TaskCollection $tasks) {
     // Do what you want with your results
-    // Using `then` let's you use type-hinting
+    // Using `call` let's you use type-hinting
     // It can be a any `callable`, not just a closure
 });
 // Or just get the result right away:

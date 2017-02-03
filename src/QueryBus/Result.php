@@ -18,10 +18,10 @@ class Result {
     }
 
     /**
-     * Execute the closure on successful result
+     * Call a closure passing the actual result as a parameter
      * @param callable $callback
      */
-    public function then(callable $callback) {
+    public function call(callable $callback) {
         $callback($this->result);
     }
 
@@ -29,8 +29,7 @@ class Result {
      * Get the successful result
      * @return mixed
      */
-    public function getResult()
-    {
+    public function getResult() {
         return $this->result;
     }
 }
