@@ -93,6 +93,14 @@ $result->getResult();
 
 // Commands do not return anything
 $commandBus->dispatch(new AddTaskCommand('Task Title', 'The task description'));
+
+// You can dispatch multiple commands in sequence with a single call
+$commandBus->dispatch(
+    new AddTaskCommand('Task Title', 'The task description'),
+    new UpdateTaskCommand('NEW Task Title', 'The NEW task description')
+);
+// Or if you like splat!
+$commandBus->dispatch(...$commandsArray);
 ```
 
 ### Message (Query & Command) classes

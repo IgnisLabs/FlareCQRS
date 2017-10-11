@@ -28,4 +28,13 @@ class CommandBusSpec extends ObjectBehavior
         $handler->handle($command)->shouldBeCalled();
         $this->dispatch($command);
     }
+
+    function it_can_dispatch_multiple_commands(MessageHandler $handler)
+    {
+        $commands = [new \stdClass(), new \stdClass()];
+
+        $handler->handle($commands[0])->shouldBeCalled();
+        $handler->handle($commands[1])->shouldBeCalled();
+        $this->dispatch(...$commands);
+    }
 }
