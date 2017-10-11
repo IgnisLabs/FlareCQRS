@@ -20,7 +20,7 @@ class ResultSpec extends ObjectBehavior
 
     function it_can_defer_the_handler_result_to_a_callable()
     {
-        $this->then(function ($result) {
+        $this->call(function ($result) {
             $this->getResult()->shouldBe($result);
         });
     }

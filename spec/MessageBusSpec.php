@@ -17,7 +17,7 @@ class MessageBusSpec extends ObjectBehavior
         $locator->getHandler(get_class($message))->willReturn($handler);
 
         $this->beAnInstanceOf(TestMiddlewareBus::class);
-        $this->beConstructedWith($locator, [new TestMiddleware]);
+        $this->beConstructedWith($locator, new TestMiddleware);
     }
 
     function it_is_initializable()
@@ -38,6 +38,6 @@ class MessageBusSpec extends ObjectBehavior
 
     function it_returns_a_new_instance_when_replacing_middlewares()
     {
-        $this->middlewares([new TestMiddleware])->shouldNotBe($this);
+        $this->middlewares(new TestMiddleware)->shouldNotBe($this);
     }
 }

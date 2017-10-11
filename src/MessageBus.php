@@ -13,7 +13,7 @@ abstract class MessageBus {
      */
     private $locator;
     /**
-     * @var array
+     * @var Middleware[]
      */
     private $middlewares;
 
@@ -22,7 +22,7 @@ abstract class MessageBus {
      * @param Locator $locator
      * @param Middleware[] $middlewares
      */
-    public function __construct(Locator $locator, array $middlewares = []) {
+    public function __construct(Locator $locator, Middleware ...$middlewares) {
         $this->locator = $locator;
         $this->middlewares = $middlewares;
     }
@@ -33,8 +33,8 @@ abstract class MessageBus {
      * @param Middleware[] $middlewares
      * @return static
      */
-    public function middlewares(array $middlewares) {
-        return new static($this->locator, $middlewares);
+    public function middlewares(Middleware ...$middlewares) {
+        return new static($this->locator, ...$middlewares);
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class MessageBus {
      * @return static
      */
     public function addMiddleware(Middleware $middleware) {
-        return new static($this->locator, array_merge($this->middlewares, [$middleware]));
+        return new static($this->locator, ...array_merge($this->middlewares, [$middleware]));
     }
 
     /**

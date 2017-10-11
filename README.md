@@ -138,17 +138,12 @@ Your middleware classes must implement the `\IgnisLabs\FlareCQRS\Middleware`
 contract.
 
 You can pass your middlewares globally to your buses on instantiation as the 
-second parameter like so:
+last parameters like so:
 
 ```php
 <?php
 $queryBus = new \IgnisLabs\FlareCQRS\QueryBus(
-    new \IgnisLabs\FlareCQRS\Handler\Locator\MapLocator($resolver, [
-        GetAllTasksQuery::class => GetAllTasksHandler::class
-    ]),
-    [
-        new LogginMiddleware($logger)
-    ]
+    $locator, new LoggingMiddleware($logger), new FooMiddleware
 );
 ```
 
@@ -157,9 +152,9 @@ Or you can add/replace the middlewares on a one time basis:
 ```php
 <?php
 // Add a middleware to the chain
-$commandBus->addMiddleware(new LogginMiddleware($logger));
+$commandBus->addMiddleware(new LoggingMiddleware($logger));
 // Completely replace the middleware chain
-$commandBus->middlewares([new LogginMiddleware($logger)]);
+$commandBus->middlewares(new LoggingMiddleware($logger), new FooMiddleware);
 ```
 
 Buses are **immutable**, so adding or replacing middlewares on a bus will always
