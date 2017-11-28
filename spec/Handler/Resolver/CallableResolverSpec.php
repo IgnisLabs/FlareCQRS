@@ -2,19 +2,17 @@
 
 namespace spec\IgnisLabs\FlareCQRS\Handler\Resolver;
 
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
 use IgnisLabs\FlareCQRS\Handler\Resolver\CallableResolver;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use spec\IgnisLabs\FlareCQRS\TestHandler;
 
 class CallableResolverSpec extends ObjectBehavior
 {
     function let()
     {
         $this->beConstructedWith(function(string $handlerId) {
-            return new class implements MessageHandler {
-                public function handle($message) {}
-            };
+            return new TestHandler();
         });
     }
 
@@ -25,6 +23,6 @@ class CallableResolverSpec extends ObjectBehavior
 
     function it_resolves_a_handler()
     {
-        $this->resolve('whatevah')->shouldBeAnInstanceOf(MessageHandler::class);
+        $this->resolve('whatevah')->shouldBeAnInstanceOf(TestHandler::class);
     }
 }

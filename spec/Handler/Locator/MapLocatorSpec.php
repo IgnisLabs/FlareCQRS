@@ -3,14 +3,14 @@
 namespace spec\IgnisLabs\FlareCQRS\Handler\Locator;
 
 use IgnisLabs\FlareCQRS\Handler\Locator\MapLocator;
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
 use IgnisLabs\FlareCQRS\Handler\Resolver\Resolver;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use spec\IgnisLabs\FlareCQRS\TestHandler;
 
 class MapLocatorSpec extends ObjectBehavior
 {
-    function let(Resolver $resolver, MessageHandler $handler)
+    function let(Resolver $resolver, TestHandler $handler)
     {
         $resolver->resolve('FooHandler')->willReturn($handler);
         $resolver->resolve('BarHandler')->willReturn($handler);
@@ -23,7 +23,7 @@ class MapLocatorSpec extends ObjectBehavior
         $this->shouldHaveType(MapLocator::class);
     }
 
-    function it_can_locate_a_handler_for_a_message(MessageHandler $handler)
+    function it_can_locate_a_handler_for_a_message(TestHandler $handler)
     {
         $this->getHandler('FooMessage')->shouldBe($handler);
     }
@@ -33,7 +33,7 @@ class MapLocatorSpec extends ObjectBehavior
         $this->shouldThrow(\RuntimeException::class)->duringGetHandler('BarMessage');
     }
 
-    function it_can_be_provided_with_more_handlers(MessageHandler $handler)
+    function it_can_be_provided_with_more_handlers(TestHandler $handler)
     {
         $this->shouldThrow(\RuntimeException::class)->duringGetHandler('BarMessage');
         $this->addHandler('BarHandler', 'BarMessage');

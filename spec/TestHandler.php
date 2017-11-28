@@ -4,8 +4,8 @@ namespace spec\IgnisLabs\FlareCQRS;
 
 use IgnisLabs\FlareCQRS\Handler\MessageHandler;
 
-class TestHandler implements MessageHandler {
-    public function handle($message) {
+class TestHandler {
+    public function __invoke($message) {
         return $message->getFoo();
     }
 }

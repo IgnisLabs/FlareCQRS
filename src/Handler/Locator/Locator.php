@@ -2,8 +2,6 @@
 
 namespace IgnisLabs\FlareCQRS\Handler\Locator;
 
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
-
 interface Locator {
 
     /**
@@ -18,7 +16,7 @@ interface Locator {
      * Get handler
      *
      * @param string $message
-     * @return MessageHandler
+     * @return callable
      */
-    public function getHandler(string $message) : MessageHandler;
+    public function getHandler(string $message) : callable;
 }

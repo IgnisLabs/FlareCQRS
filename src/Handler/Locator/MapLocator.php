@@ -2,7 +2,6 @@
 
 namespace IgnisLabs\FlareCQRS\Handler\Locator;
 
-use IgnisLabs\FlareCQRS\Handler\MessageHandler;
 use IgnisLabs\FlareCQRS\Handler\Resolver\Resolver;
 
 class MapLocator implements Locator {
@@ -52,9 +51,9 @@ class MapLocator implements Locator {
      * Get handler
      *
      * @param string $message
-     * @return MessageHandler
+     * @return callable
      */
-    public function getHandler(string $message): MessageHandler
+    public function getHandler(string $message): callable
     {
         $handlerId = $this->handlers[$message] ?? null;
         if (!$handlerId) {
