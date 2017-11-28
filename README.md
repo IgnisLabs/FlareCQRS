@@ -156,19 +156,20 @@ class MyMessageHandler {
 
 ### Middlewares
 
-You can create middlewares to interact with the messages before they reach their
-respective handlers.
+You can create middlewares to interact with the messages before they
+reach their respective handlers.
 
-Your middleware classes must implement the `\IgnisLabs\FlareCQRS\Middleware`
-contract.
+Middlewares, same as with the Handlers, are `callable`s, but you might
+prefer them to be classes, by using the same `__invoke` strategy.
 
-You can pass your middlewares globally to your buses on instantiation as the 
-last parameters like so:
+You can pass your middlewares globally to your buses on instantiation as
+the last parameters like so:
 
 ```php
 <?php
+$callableMiddleware = function() { /* ... */ };
 $queryBus = new \IgnisLabs\FlareCQRS\QueryBus(
-    $locator, new LoggingMiddleware($logger), new FooMiddleware
+    $locator, new LoggingMiddleware($logger), new FooMiddleware, $callableMiddleware
 );
 ```
 

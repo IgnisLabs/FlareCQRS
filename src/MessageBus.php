@@ -19,9 +19,9 @@ abstract class MessageBus {
     /**
      * MessageBus constructor.
      * @param Locator $locator
-     * @param Middleware[] $middlewares
+     * @param callable[] $middlewares
      */
-    public function __construct(Locator $locator, Middleware ...$middlewares) {
+    public function __construct(Locator $locator, callable ...$middlewares) {
         $this->locator = $locator;
         $this->middlewares = $middlewares;
     }
@@ -29,20 +29,20 @@ abstract class MessageBus {
     /**
      * Replace middlewares
      * It will create another bus instance, thus, not affecting subsequent runs
-     * @param Middleware[] $middlewares
+     * @param callable[] $middlewares
      * @return static
      */
-    public function middlewares(Middleware ...$middlewares) {
+    public function middlewares(callable ...$middlewares) {
         return new static($this->locator, ...$middlewares);
     }
 
     /**
      * Add a middleware to the chain
      * It will create another bus instance, thus, not affecting subsequent runs
-     * @param Middleware $middleware
+     * @param callable $middleware
      * @return static
      */
-    public function addMiddleware(Middleware $middleware) {
+    public function addMiddleware(callable $middleware) {
         return new static($this->locator, ...array_merge($this->middlewares, [$middleware]));
     }
 
@@ -84,9 +84,9 @@ abstract class MessageBus {
      */
     private function validateMiddlewares() {
         foreach ($this->middlewares as $middleware) {
-            if (!$middleware instanceof Middleware) {
+            if (!is_callable($middleware)) {
                 throw new \RuntimeException(
-                    sprintf('[%s] should be a [%s] instance', get_class($middleware), Middleware::class)
+                    sprintf('[%s] should be [callable]', get_class($middleware))
                 );
             }
         }
@@ -94,9 +94,9 @@ abstract class MessageBus {
 
     /**
      * Create the middleware chain core function
-     * @return \Closure
+     * @return callable
      */
-    private function createCoreFunction() {
+    private function createCoreFunction() : callable {
         return function($message) {
             return $this->getHandler($message)($message);
         };
@@ -104,13 +104,13 @@ abstract class MessageBus {
 
     /**
      * Create next middleware chain link
-     * @param $next
-     * @param $middleware
-     * @return \Closure
+     * @param callable $next
+     * @param callable $middleware
+     * @return callable
      */
-    private function createNext($next, $middleware) {
+    private function createNext(callable $next, callable $middleware) : callable {
         return function ($message) use ($next, $middleware) {
-            return $middleware->execute($message, $next);
+            return $middleware($message, $next);
         };
     }
 }
