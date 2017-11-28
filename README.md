@@ -112,30 +112,47 @@ You can, however, take advantage of the `DataAccessorTrait`. With it you can
 have automatic accessor properties for your message classes. The trait defines
 a `data` private property, a `get` accessor method and the `__get` magic method
 so you can access the data as properties:
- 
- ```php
- <?php
- 
+
+```php
+<?php
+
 class MyMessage {
     use \IgnisLabs\FlareCQRS\Message\DataAccessorTrait;
  
     public function __construct(string $foo, int $bar) {
-        $this->data = compact('foo', 'bar');
+        $this->setData(compact('foo', 'bar'));
     }
 }
- 
-$message = new MyMessage;
+
+$message = new MyMessage('baz', 'qux');
 // Using generic `get` accessor:
-$message->get('foo');
+$message->get('foo'); // returns 'baz'
 // Using the magic accessor:
-$message->bar;
- ```
+$message->bar; // returns 'qux'
+```
 
 ### Handlers
 
-The handlers, on the other hand, must conform to the
-`\IgnisLabs\FlareCQRS\Handler\MessageHandler` contract. But the contract's only
-requirement is a `handle` method that will receive your command class instance.
+A handler can be anything, as long as it is `callable`. Although, you
+will probably want to make them classes. In order to make a class be
+callable, just implement the `__invoke` method in it.
+
+The `__invoke` method will receive an instance of the corresponding
+command.
+
+This way, the classes are 100% yours, no hard dependency on this
+library whatsoever and you can typehint freely.
+
+Let's see a quick example:
+
+```php
+<?php
+class MyMessageHandler {
+    public function __invoke(MyMessage $command) {
+     // do something here
+    }
+}
+```
 
 ### Middlewares
 
