@@ -8,6 +8,6 @@ class TestMessageDataAccesorTrait {
     use DataAccessorTrait;
 
     public function __construct(string $foo, int $bar) {
-        $this->data = compact('foo', 'bar');
+        $this->setData(compact('foo', 'bar'));
     }
 }

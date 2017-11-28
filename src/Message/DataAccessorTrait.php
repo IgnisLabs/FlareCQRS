@@ -12,9 +12,9 @@ trait DataAccessorTrait {
 
     /**
      * Set the message data
-     * @param $data
+     * @param array $data
      */
-    protected function setData($data) {
+    protected function setData(array $data) {
         $this->data = $data;
     }
 
