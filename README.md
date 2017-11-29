@@ -48,12 +48,17 @@ FlareCQRS is framework-agnostic, but it's really easy to bootstrap and use.
 // This will get you a new instance of the hander based on the _handler id_,
 // i.e, the fully-qualified class name, or wharever identifier you might use in
 // a framework container.
-// By default FlareCQRS comes with a CallableResolver that will let you do this
-// really easily for any framework.
-$resolver = new \IgnisLabs\FlareCQRS\Handler\Resolver\CallableResolver(function($handlerId) use($app) {
-    // Assuming Laravel's container
-    return new $app->make($handlerId);
+// By default FlareCQRS comes with two resolvers, a CallableResolver and a PSR11Resolver.
+// You can always create your own resolver by implementing the `Resolver` contract.
+
+// Generic callable resolver
+$resolver = new \IgnisLabs\FlareCQRS\Handler\Resolver\CallableResolver(function($handlerId) {
+    // Somehow resolve your handler handler:
+    return new performMagicToGetHandlerInstance($handlerId);
 });
+
+// PSR11 resolver (assuming Laravel's `$app` container, since it's PSR-11 compliant)
+$resolver = new \IgnisLabs\FlareCQRS\Handler\Resolver\PSR11Resolver($app);
 
 // Now instantiate the buses passing them a Locator instance
 
