@@ -19,7 +19,7 @@ class MapLocator implements Locator {
 
     /**
      * Pool of instantiated handlers
-     * @var MessageHandler[]
+     * @var callable[]
      */
     private $handlersPool = [];
 
