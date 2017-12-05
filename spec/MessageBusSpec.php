@@ -2,22 +2,23 @@
 
 namespace spec\IgnisLabs\FlareCQRS;
 
-use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
 use IgnisLabs\FlareCQRS\Handler\MessageHandler;
+use IgnisLabs\FlareCQRS\Handler\Router\Router;
 use IgnisLabs\FlareCQRS\MessageBus;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use spec\IgnisLabs\FlareCQRS\Handler\Router\StubHandler;
 
 class MessageBusSpec extends ObjectBehavior
 {
-    function let(Locator $locator)
+    function let(Router $router)
     {
         $message = new TestMessage('foo');
         $handler = new TestHandler();
-        $locator->getHandler(get_class($message))->willReturn($handler);
+        $router->route(get_class($message))->willReturn($handler);
 
         $this->beAnInstanceOf(TestMiddlewareBus::class);
-        $this->beConstructedWith($locator, new TestMiddleware);
+        $this->beConstructedWith($router, new TestMiddleware);
     }
 
     function it_is_initializable()

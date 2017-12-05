@@ -2,7 +2,7 @@
 
 namespace spec\IgnisLabs\FlareCQRS;
 
-use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
+use IgnisLabs\FlareCQRS\Handler\Router\Router;
 use IgnisLabs\FlareCQRS\QueryBus;
 use IgnisLabs\FlareCQRS\QueryBus\Result;
 use PhpSpec\ObjectBehavior;
@@ -10,10 +10,10 @@ use Prophecy\Argument;
 
 class QueryBusSpec extends ObjectBehavior
 {
-    function let(Locator $locator, TestHandler $handler)
+    function let(Router $router, TestHandler $handler)
     {
-        $locator->getHandler(get_class(new \stdClass()))->willReturn($handler);
-        $this->beConstructedWith($locator);
+        $router->route(get_class(new \stdClass()))->willReturn($handler);
+        $this->beConstructedWith($router);
     }
 
     function it_is_initializable()

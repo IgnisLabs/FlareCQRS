@@ -3,14 +3,15 @@
 namespace IgnisLabs\FlareCQRS;
 
 use IgnisLabs\FlareCQRS\Handler\Locator\Locator;
+use IgnisLabs\FlareCQRS\Handler\Router\Router;
 
 abstract class MessageBus {
 
     /**
-     * Handler locator
-     * @var Locator
+     * Handler router
+     * @var Router
      */
-    private $locator;
+    private $router;
     /**
      * @var Middleware[]
      */
@@ -18,11 +19,11 @@ abstract class MessageBus {
 
     /**
      * MessageBus constructor.
-     * @param Locator $locator
-     * @param callable[] $middlewares
+     * @param Router     $router
+     * @param callable[] ...$middlewares
      */
-    public function __construct(Locator $locator, callable ...$middlewares) {
-        $this->locator = $locator;
+    public function __construct(Router $router, callable ...$middlewares) {
+        $this->router = $router;
         $this->middlewares = $middlewares;
     }
 
@@ -33,7 +34,7 @@ abstract class MessageBus {
      * @return static
      */
     public function middlewares(callable ...$middlewares) {
-        return new static($this->locator, ...$middlewares);
+        return new static($this->router, ...$middlewares);
     }
 
     /**
@@ -43,16 +44,7 @@ abstract class MessageBus {
      * @return static
      */
     public function addMiddleware(callable $middleware) {
-        return new static($this->locator, ...array_merge($this->middlewares, [$middleware]));
-    }
-
-    /**
-     * Get the message handler
-     * @param object $message
-     * @return callable
-     */
-    protected function getHandler($message) : callable {
-        return $this->locator->getHandler(get_class($message));
+        return new static($this->router, ...array_merge($this->middlewares, [$middleware]));
     }
 
     /**
@@ -98,7 +90,7 @@ abstract class MessageBus {
      */
     private function createCoreFunction() : callable {
         return function($message) {
-            return $this->getHandler($message)($message);
+            return $this->route($message);
         };
     }
 
@@ -112,5 +104,14 @@ abstract class MessageBus {
         return function ($message) use ($next, $middleware) {
             return $middleware($message, $next);
         };
+    }
+
+    /**
+     * Execute route for message
+     * @param $message
+     * @return mixed
+     */
+    private function route($message) {
+        return $this->router->route(get_class($message))($message);
     }
 }
