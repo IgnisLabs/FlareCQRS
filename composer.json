@@ -29,5 +29,8 @@
     "require-dev": {
         "phpspec/phpspec": "^3.2",
         "psr/container": "^1.0@dev"
+    },
+    "scripts": {
+        "spec": "phpspec --ansi run"
     }
 }
