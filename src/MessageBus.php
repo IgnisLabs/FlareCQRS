@@ -48,6 +48,13 @@ abstract class MessageBus {
     }
 
     /**
+     * Dispatch the message to it's handler(s)
+     * @param mixed $message
+     * @return void|Result
+     */
+    abstract function dispatch($message);
+
+    /**
      * Handle the message and pass the result along
      * @param object $message
      * @return mixed
