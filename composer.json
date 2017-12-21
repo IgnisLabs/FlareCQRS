@@ -31,6 +31,7 @@
         "psr/container": "^1.0@dev"
     },
     "scripts": {
-        "spec": "phpspec --ansi run"
+        "spec": "phpspec --ansi run",
+        "desc": "phpspec --ansi desc"
     }
 }
