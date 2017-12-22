@@ -3,7 +3,8 @@ Flare CQRS
 
 Flare is a small and easy to use CQRS library.  
 It drives CQRS by making use of the message bus pattern, separating Queries
-(interrogatory messages) from Commands (imperative messages).
+(interrogatory messages), Commands (imperative messages), and Events
+(informational messages).
 
 This library was greatly inspired by [Messaging Flavours][1] article by Mathias
 Verraes.
@@ -60,23 +61,35 @@ $resolver = new \IgnisLabs\FlareCQRS\Handler\Resolver\CallableResolver(function(
 // PSR11 resolver (assuming Laravel's `$app` container, since it's PSR-11 compliant)
 $resolver = new \IgnisLabs\FlareCQRS\Handler\Resolver\PSR11Resolver($app);
 
-// Now instantiate the buses passing them a Locator instance
+// # QueryBus
 
-$queryBus = new \IgnisLabs\FlareCQRS\QueryBus(
-    // Tell the Locator which handler corresponds to which query
-    // and how to instantiate the handlers (passing in the Resolver)
-    new \IgnisLabs\FlareCQRS\Handler\Locator\MapLocator($resolver, [
-        GetAllTasksQuery::class => GetAllTasksHandler::class
-    ])
-);
+// Tell the Router which handler corresponds to which query
+// and how to instantiate the handlers (passing in the Resolver)
+$queryRouter = new \IgnisLabs\FlareCQRS\Handler\Router\SingleHandlerRouter($resolver);
+$queryRouter->add(GetAllTasksQuery::class, GetAllTasksHandler::class);
+$queryRouter->add(GetTaskQuery::class, GetTaskHandler::class);
+// Now instantiate the buses passing them a Router instance
+$queryBus = new \IgnisLabs\FlareCQRS\QueryBus($queryRouter);
 
-$commandBus = new \IgnisLabs\FlareCQRS\CommandBus(
-    // Tell the Locator which handler corresponds to which command
-    // and how to instantiate the handlers (passing in the Resolver)
-    new \IgnisLabs\FlareCQRS\Handler\Locator\MapLocator($resolver, [
-        AddTaskCommand::class => AddTaskHandler::class
-    ])
-);
+// # CommandBus
+
+// Tell the Router which handler corresponds to which command
+// and how to instantiate the handlers (passing in the Resolver)
+$commandRouter = new \IgnisLabs\FlareCQRS\Handler\Router\SingleHandlerRouter($resolver);
+$commandRouter->add(AddTaskCommand::class, AddTaskHandler::class);
+// Now instantiate the buses passing them a Router instance
+$commandBus = new \IgnisLabs\FlareCQRS\CommandBus($commandRouter);
+
+// # EventBus
+
+// In this case, we use the `MultiHandlerRouter`
+// Tell the Router which handlers corresponds to which event
+// and how to instantiate the handlers (passing in the Resolver)
+$eventRouter = new \IgnisLabs\FlareCQRS\Handler\Router\MultiHandlerRouter($resolver);
+$eventRouter->add(TaskWasAdded::class, DoSomethingWhenTaskIsAdded::class);
+$eventRouter->add(TaskWasAdded::class, DoSomethingElseWhenTaskIsAdded::class);
+// Now instantiate the buses passing them a Router instance
+$eventBus = new \IgnisLabs\FlareCQRS\CommandBus($eventRouter);
 ```
 
 ### Usage
@@ -96,19 +109,14 @@ $result->call(function(TaskCollection $tasks) {
 // Or just get the result right away:
 $result->getResult();
 
-// Commands do not return anything
-$commandBus->dispatch(new AddTaskCommand('Task Title', 'The task description'));
+// Commands usually do not return anything, but they can return events from your handlers
+$events = $commandBus->dispatch(new AddTaskCommand('Task Title', 'The task description'));
 
-// You can dispatch multiple commands in sequence with a single call
-$commandBus->dispatch(
-    new AddTaskCommand('Task Title', 'The task description'),
-    new UpdateTaskCommand('NEW Task Title', 'The NEW task description')
-);
-// Or if you like splat!
-$commandBus->dispatch(...$commandsArray);
+// Events do not return anything
+$eventBus=>dispatch(new TaskWasAdded($task->toArray()));
 ```
 
-### Message (Query & Command) classes
+### Message (Query, Command, & Event) classes
 
 Your Message classes are simple DTO objects, so there are no rules or contracts
 to use, they can be whatever you like.
@@ -146,7 +154,7 @@ The `__invoke` method will receive an instance of the corresponding
 command.
 
 This way, the classes are 100% yours, no hard dependency on this
-library whatsoever and you can typehint freely.
+library whatsoever and you can type-hint freely.
 
 Let's see a quick example:
 
@@ -155,6 +163,66 @@ Let's see a quick example:
 class MyMessageHandler {
     public function __invoke(MyMessage $command) {
      // do something here
+    }
+}
+```
+
+### Generating Events
+
+You can generate events however you want, but we included a convenient
+trait for you to use in your entities/models, handlers, or wherever you
+may need to.
+
+Let's see a usage example:
+
+```php
+<?php
+class User {
+    use \IgnisLabs\FlareCQRS\Traits\GeneratesEvents;
+    // ...
+    public static function signUp($id, $email, $password) {
+        $user = new static($id, $email);
+        $user->setPassword($password);
+        $user->recordThat(new UserHasSignedUp($user->toArray()));
+        return $user;
+    }
+    // ...
+}
+
+class SignUpUserHandler {
+    public function __invoke(SignUpUser $command) {
+        $user = User::register($command->id, $command->email, $command->password);
+        return $user->getRecordedEvents();
+    }
+}
+```
+
+### Automatic event dispatching from command handlers
+
+Your command handlers may return and/or yield events, but in order for
+the `CommandBus` to automatically dispatch the events, you need to
+enable this by passing to it the `EventBus`:
+
+```php
+<?php
+/* @var \IgnisLabs\FlareCQRS\CommandBus $commandBus */
+$commandBus->dispatchesEvents($eventBus);
+$commandBus->dispatch(new SomeCommand('foo'));
+```
+
+Let's see a quick example of what the command handler may look like
+based on the previous **Generating Events** example:
+
+```php
+<?php
+class SignUpUserHandler {
+    public function __invoke(SignUpUser $command) {
+        // You can yield events
+        yield new SomeEvent;
+        
+        $user = User::register($command->id, $command->email, $command->password);
+        // And/Or return an array of events
+        return $user->getRecordedEvents();
     }
 }
 ```
