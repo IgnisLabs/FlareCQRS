@@ -3,6 +3,7 @@
 namespace spec\IgnisLabs\FlareCQRS;
 
 use IgnisLabs\FlareCQRS\CommandBus;
+use IgnisLabs\FlareCQRS\EventBus;
 use IgnisLabs\FlareCQRS\Handler\Router\Router;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -28,12 +29,15 @@ class CommandBusSpec extends ObjectBehavior
         $this->dispatch($command);
     }
 
-    function it_can_dispatch_multiple_commands(TestHandler $handler)
+    function it_can_dispatch_events_generated_from_handler(TestHandler $handler, EventBus $eventBus)
     {
-        $commands = [new \stdClass(), new \stdClass()];
+        $command = new \stdClass();
+        $handler->__invoke($command)->shouldBeCalled()->willReturn(['event-1', 'event-2']);
 
-        $handler->__invoke($commands[0])->shouldBeCalled();
-        $handler->__invoke($commands[1])->shouldBeCalled();
-        $this->dispatch(...$commands);
+        $this->dispatchesEvents($eventBus);
+        $this->dispatch($command);
+
+        $eventBus->dispatch('event-1')->shouldHaveBeenCalled();
+        $eventBus->dispatch('event-2')->shouldHaveBeenCalled();
     }
 }
